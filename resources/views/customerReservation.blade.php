@@ -9,12 +9,9 @@
     <title>Checkout example · Bootstrap v4.6</title>
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/checkout/">
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Bootstrap core CSS -->
     <link href="Bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-
-
     <style>
       .bd-placeholder-img {
         font-size: 1.125rem;
@@ -143,8 +140,6 @@
           font-size: 13px !important;
       }
     </style>
-
-    
     <!-- Custom styles for this template -->
     <link href="Assets/Css/form-validation.css" rel="stylesheet">
   </head>
@@ -226,23 +221,24 @@
             </div>
           </div>
         </div>
-
-        {{-- <div class="mb-3">
-          <label for="username">Username</label>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text">@</span>
-            </div>
-            <input type="text" class="form-control" id="username" placeholder="Username" required>
-            <div class="invalid-feedback" style="width: 100%;">
-              Your username is required.
+        {{-- <span class="text-muted"> (Optional)</span> --}}
+        <div class="row">
+          <div class="col-md-4 mb-3">
+            <label for="Nickname">Nickname</label>
+            <input type="text" class="form-control" id="Nickname" placeholder="Tuklas" required value="" autocomplete="off">
+        
+          </div>
+          <div class="col-md-8 mb-3">
+            <label for="mobileNumber">Mobile Number</label>
+            <input type="text" class="form-control" id="mobileNumber" placeholder="09213349212" value="" required autocomplete="off">
+            <div class="invalid-feedback">
+              Valid Mobile Number is required.
             </div>
           </div>
-        </div> --}}
-
+        </div>
         <div class="mb-3">
-          <label for="email">Email <span class="text-muted">(Optional)</span></label>
-          <input type="email" class="form-control" id="email" placeholder="you@example.com" autocomplete="off">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" required placeholder="you@example.com" autocomplete="off">
           <div class="invalid-feedback">
             Please enter a valid email address.
           </div>
@@ -257,15 +253,11 @@
         </div>
 
         <div class="mb-3">
-          <label for="mobile number">Mobile Number</label>
-          <input type="text" class="form-control" id="mobileNumber" required placeholder="09213349212" autocomplete="off">
-        </div>
-        <div class="mb-3">
-          <label for="Package">Burial Lot Types</label>
-            <select class="custom-select d-block w-100" id="country" required>
+          <label for="Package">Lot Type</label>
+            <select class="custom-select d-block w-100" id="Lot_type" required>
               <option value="">Choose your Lot Type...</option>
-              <option>Lawn Lot</option>
-              <option>Apartment-type Lot</option>
+              <option value="Lawn">Lawn Lot</option>
+              <option value="Apartment">Apartment Lot</option>
             </select>
         </div>
         <div class="mb-3">
@@ -279,19 +271,25 @@
               <option>Package 5</option>
             </select>
         </div>
-        <div class="mb-3">
+        {{-- <div class="mb-3">
           <input type="checkbox" aria-label="Radio button for following text input">
           <label for="Package" style="font-size: 1.05rem; font-weight: bold;">Rush Burial?</label>
-        </div>
-        <hr class="mb-4">
-        <div class="col-md-3 col-sm-3 col-xl-4 mr-auto pl-0">
+        </div> --}}
+        {{-- <hr class="mb-4"> --}}
+        {{-- <div class="col-md-3 col-sm-3 col-xl-4 mr-auto pl-0">
             <span class="btn btn-info btn-sm btn-block my-2" id="chooseLot" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample"><span style="font: 600;font-size:13px;">Choose your lot here</span></span>
-        </div>
+        </div> --}}
         <div class="row">
             <div class="col-md-12">
-                <div class="collapse" id="collapseExample">
                     <div class="card card-body">
-                        <table>
+                        <div class=" justify-content-center d-flex">
+                            <select id="LotGroup" class="custom-select d-block col-11"  role="button" aria-expanded="false" aria-controls="collapseExample" required>
+                              <option value="">Lot Group</option>
+                            </select>
+                        </div>
+
+                     <div class="collapse" id="collapseExample">
+                        <table id="table_lot_group">
                             <tr>
                             <td>Lot 1</td>
                             <td>Lot 2</td>
@@ -344,7 +342,6 @@
                 </div>
             </div>
         <hr class="mb-4">
-        
         <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
       </form>
     </div>
@@ -361,7 +358,7 @@
 </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script> --}}
     <script>window.jQuery || document.write('<script src="../Sample/assets/js/vendor/jquery.slim.min.js"><\/script>')</script>
     <script src="../Sample/assets/dist/js/bootstrap.bundle.min.js"></script>
     <script src="Assets/Js/form-validation.js"></script>
@@ -372,15 +369,122 @@
             var ctr = 0;
             $('.select2').select2();
             $('#optionsLot').hide();
-           $("#chooseLot").on("click", function() {
-                if(ctr==0){
-                    $('#optionsLot').show();
-                    ctr++;
-                }else{
-                    $('#optionsLot').hide();
-                    ctr--;
-                }
-                
+            $("#chooseLot").on("click", function() {
+                  if(ctr==0){
+                      $('#optionsLot').show();
+                      ctr++;
+                  }else{
+                      $('#optionsLot').hide();
+                      ctr--;
+                  }
+              });
+
+              $('#LotGroup').on('change', function () {
+              var selectedValue = $(this).val();
+
+              if (selectedValue) {
+                $('#collapseExample').collapse('show');
+              } else {
+                $('#collapseExample').collapse('hide');
+              }
+            });
+
+            $('#Lot_type').on('change', function () { //append Lot group dropdown
+               $("#LotGroup").children().not(":first").remove();
+               $('#table_lot_group tr').remove();
+               var selectedValue = $(this).val();
+               if(selectedValue){
+                var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+          
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('Lot_group') }}", 
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        Lot_type: selectedValue
+                    },
+                    dataType: "json",
+                    success: function (response) {
+
+                      $("#LotGroup").children().not(":first").remove();
+
+                      $.each(response.Lot_group, function(index, item) {
+                          $("#LotGroup").append('<option value="' + item.Lot_group + '">' + item.Lot_group + '</option>');
+                      });
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+               }else{
+
+               }
+            });
+            
+            $('#LotGroup').on('change', function () { //append Lot group dropdown
+               var selectedValue = $(this).val();
+               if(selectedValue){
+                var csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+          
+                $.ajax({
+                    type: "GET",
+                    url: "{{ route('Available_lot') }}", 
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    data: {
+                        Lot_group: selectedValue
+                    },
+                    dataType: "json",
+                    success: function (response) {
+             
+                    $('#table_lot_group tr').remove();
+                    let row = "<tr>";
+                    let count = 0;
+
+                    $.each(response.Available_lot, function(index, item) {
+                        if (item.Lot_status == "Available") {
+                            row += "<td>" + item.Lot_name + "</td>";
+                        }else if(item.Lot_status == "Occupied") {
+                            row += "<td class='occupied'>Occupied</td>";
+                        }else{
+                          row += "<td class=''>No data</td>";
+                        }
+
+                        count++;
+
+                        // If 5 cells added, close row and append it, then reset
+                        if (count % 5 === 0) {
+                            row += "</tr>";
+                            $("#table_lot_group").append(row);
+                            row = "<tr>"; // Start a new row
+                        }
+                    });
+
+                    // If remaining <td>s are less than 5, pad the row
+                    if (count % 5 !== 0) {
+                        let remaining = 5 - (count % 5);
+                        for (let i = 0; i < remaining; i++) {
+                            row += "<td>"+"No data"+"</td>"; 
+                        }
+                        row += "</tr>";
+                        $("#table_lot_group").append(row);
+                    }
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error:', error);
+                    }
+                });
+               }else{
+
+               }
             });
         });
     </script>
